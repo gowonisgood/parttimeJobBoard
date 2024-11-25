@@ -1,2 +1,2 @@
 # WebTermProject
-웹응프 텀프로잭트
+웹응프 텀프로젝트
