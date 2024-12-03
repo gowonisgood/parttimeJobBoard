@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="job-listings">
+    {% if user.role == 'employer' %}
+    <form id="job-form" action="/post/jobs" method="post">
+        <input type="text" name="title" placeholder="공고 제목" required>
+        <textarea name="description" placeholder="공고 내용을 작성하세요" required></textarea>
+        <input type="number" name="wage" placeholder="시급 (원)" required>
+        <button type="submit" class="btn">공고 등록</button>
+    </form>
+    {% endif %}
+
+    <h2>구인 공고</h2>
+    {% for job in jobs %}
+    <div class="job-post">
+        <h3>{{ job.title }}</h3>
+        <p>{{ job.description }}</p>
+        <p>시급: {{ job.wage }}원</p>
+        <p>고용주: {{ job.employerName }}</p>
+        {% if user.role == 'employee' and not job.applicants.includes(user.id) %}
+        <form action="/jobs/{{ job.id }}/apply" method="post">
+            <button type="submit" class="btn">지원하기</button>
+        </form>
+        {% elif user.role == 'employee' %}
+        <p>이미 지원한 공고입니다.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

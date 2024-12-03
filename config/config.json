@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "root",
+    "database": "alba_platform",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "your_password",
+    "database": "your_test_database_name",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "your_password",
+    "database": "your_production_database_name",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

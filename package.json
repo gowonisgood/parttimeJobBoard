@@ -1,20 +1,30 @@
 {
   "name": "term",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "텀프로젝트 한고우너",
+  "main": "app.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "nodemon app"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "chokidar": "^3.6.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
     "express": "~4.16.1",
+    "express-session": "^1.18.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "mysql2": "^3.11.5",
+    "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
-    "pug": "2.0.0-beta11"
+    "sequelize": "^6.37.5",
+    "sequelize-cli": "^6.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }

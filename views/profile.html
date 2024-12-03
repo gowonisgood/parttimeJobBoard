@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{% if users.role == 'employer' %}
+<h2>내가 올린 공고</h2>
+{% if jobs.length > 0 %}
+<ul>
+  {% for job in jobs %}
+  <li>
+    <h3>{{ job.title }}</h3>
+    <p>{{ job.description }}</p>
+    <p><strong>시급:</strong> {{ job.wage | numberFormat(2) }} 원</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>등록된 공고가 없습니다.</p>
+{% endif %}
+{% elif users.role == 'employee' %}
+<h2>지원한 알바</h2>
+{% if appliedJobs.length > 0 %}
+<ul>
+  {% for job in appliedJobs %}
+  <li>
+    <h3>{{ job.title }}</h3>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>지원한 알바가 없습니다.</p>
+{% endif %}
+{% endif %}
+{% endblock %}
