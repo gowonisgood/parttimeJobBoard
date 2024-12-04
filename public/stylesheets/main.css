@@ -1,9 +1,150 @@
+/* General Reset */
+body, html, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* Base Styles */
 body {
   font-family: Arial, sans-serif;
-  margin: 20px;
+  line-height: 1.5;
+  background-color: #f8f9fa;
+  color: #212529;
+  margin: 0;
   padding: 20px;
 }
 
-a {
-  color: #00B7FF;
+h1, h2, h3 {
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 15px;
+}
+
+.container, .job-listings {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Form Styles */
+form {
+  margin-bottom: 20px;
+}
+
+form input, form textarea, form button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+form button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+input[type="radio"] {
+  display: inline-block;
+  width: auto;
+  margin-right: 5px;
+}
+
+label {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1rem;
+}
+
+/* Job Post Styles */
+.job-post {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #fdfdfe;
+}
+
+.job-post h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  color: #495057;
+}
+
+.job-post p {
+  margin-bottom: 10px;
+  color: #6c757d;
+}
+
+.job-post .btn {
+  width: auto;
+  padding: 10px 20px;
+}
+
+/* User Section Styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #fdfdfe;
+}
+
+ul li h3 {
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  color: #495057;
+}
+
+/* Error Message Styles */
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+/* Footer Styles */
+footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #6c757d;
+  text-align: center;
 }

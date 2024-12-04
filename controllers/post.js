@@ -11,16 +11,20 @@ exports.jobPost = async (req, res, next) => {
             return res.status(400).json({ message: "모든 필드를 채워주세요." });
         }
 
-        // 새로운 구인 공고 추가
-        const newJob = await db.Job.create({
-            title,
-            description,
-            wage,
-            employer_id: employerId,
-        });
+        // 데이터 삽입 쿼리 실행
+        const query = `
+            INSERT INTO jobs (title, description, wage, employer_id) 
+            VALUES (?, ?, ?, ?)
+        `;
 
+        const [result] = await db.execute(query, [title, description, wage, employerId]);
+
+        res.redirect('/');
         // 성공적으로 생성되었음을 응답
-        res.status(201).json({ message: "구인 공고가 등록되었습니다.", job: newJob });
+        /*res.status(201).json({
+            message: "구인 공고가 등록되었습니다.",
+            job: { id: result.insertId, title, description, wage, employer_id: employerId },
+        });*/
     } catch (err) {
         console.error(err);
         next(err); // 에러를 처리 미들웨어로 전달

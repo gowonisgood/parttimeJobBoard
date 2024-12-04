@@ -52,9 +52,9 @@ exports.renderJoin = (req, res) =>{
 exports.renderMain = async (req, res, next) => {
     try {
         const user = req.user; // 현재 로그인한 사용자 정보
-        if (!user) {
+        /*if (!user) {
             return res.redirect('/auth/login'); // 로그인하지 않은 경우 로그인 페이지로 이동
-        }
+        }*/
 
         // 구인 공고 데이터 조회
         const [jobs] = await db.execute(`

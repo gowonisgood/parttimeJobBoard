@@ -8,6 +8,10 @@ const router = express.Router();
 // POST /auth/join
 router.post('/join', isNotLoggedIn, join);
 
+/*router.get('/login', (req, res) => {
+   return res.redirect('/');
+});*/
+
 // POST /auth/login
 router.post('/login', isNotLoggedIn, login);
 
