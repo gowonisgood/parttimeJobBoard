@@ -19,7 +19,7 @@
         <p>시급: {{ job.wage }}원</p>
         <p>고용주: {{ job.employerName }}</p>
         {% if user.role == 'employee' and not job.applicants.includes(user.id) %}
-        <form action="/jobs/{{ job.id }}/apply" method="post">
+        <form action="/post/jobs/{{ job.id }}/apply" method="post">
             <button type="submit" class="btn">지원하기</button>
         </form>
         {% elif user.role == 'employee' %}

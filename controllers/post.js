@@ -30,3 +30,41 @@ exports.jobPost = async (req, res, next) => {
         next(err); // 에러를 처리 미들웨어로 전달
     }
 };
+
+exports.jobApply = async (req, res, next) => {
+    try {
+        const jobId = req.params.jobId;
+        const employeeId = req.user.id;
+
+        // 필요한 값들이 정의되어 있는지 확인
+        if (!jobId || !employeeId) {
+            return res.status(400).json({ message: "잘못된 요청입니다." });
+        }
+
+        // 사용자 역할이 직원인지 확인
+        if (req.user.role !== 'employee') {
+            return res.status(403).json({ message: "직원만 지원할 수 있습니다." });
+        }
+
+        // 이미 지원했는지 확인
+        const checkQuery = `
+            SELECT * FROM applicants WHERE job_id = ? AND employee_id = ?
+        `;
+        const [rows] = await db.execute(checkQuery, [jobId, employeeId]);
+
+        if (rows.length > 0) {
+            return res.status(400).json({ message: "이미 이 공고에 지원하셨습니다." });
+        }
+
+        // 지원자 테이블에 추가
+        const insertQuery = `
+            INSERT INTO applicants (job_id, employee_id) VALUES (?, ?)
+        `;
+        await db.execute(insertQuery, [jobId, employeeId]);
+
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+};
