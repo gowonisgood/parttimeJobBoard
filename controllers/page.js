@@ -1,40 +1,36 @@
 const db = require(process.cwd() + '/models');
 
+//프로필 렌더링
 exports.renderProfile = async (req, res) => {
     try {
-        // 현재 로그인한 사용자 ID 가져오기 (예: req.user.id)
-        //req.user 같은 경우는 보통 미들웨어에서 알아서 사용자 정보로 됨 - passport/index.js에 구현해둠
         const userId = req.user.id;
+        const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
 
-        // 사용자 정보 조회
-        const user = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
-
-        if (!user || user.length === 0) {
+        if (!users || users.length === 0) {
             return res.status(404).send('사용자를 찾을 수 없습니다.');
         }
 
-        const role = user[0].role;
+        const role = users[0].role;
         let jobs = [];
         let appliedJobs = [];
 
         if (role === 'employer') {
-            // Employer: 자신이 올린 공고 가져오기
-            jobs = await db.query('SELECT * FROM jobs WHERE employer_id = ?', [userId]);
+            const [jobResults] = await db.query('SELECT * FROM jobs WHERE employer_id = ?', [userId]);
+            jobs = jobResults;
         } else if (role === 'employee') {
-            // Employee: 자신이 지원한 공고 가져오기
-            appliedJobs = await db.query(
+            const [appliedJobResults] = await db.query(
                 `SELECT j.* 
                  FROM applicants a 
                  JOIN jobs j ON a.job_id = j.id 
                  WHERE a.employee_id = ?`,
                 [userId]
             );
+            appliedJobs = appliedJobResults;
         }
 
-        // 템플릿에 데이터 렌더링
         res.render('profile', {
             title: '내 정보 - alba_platforms',
-            users: user[0],
+            user: users[0], // 'users'를 'user'로 변경
             jobs,
             appliedJobs
         });
@@ -44,11 +40,13 @@ exports.renderProfile = async (req, res) => {
     }
 };
 
+
 exports.renderJoin = (req, res) =>{
     res.render('join',{title: '회원 가입 - alba_platforms'});
 };
 
 // controllers/page.js
+//Main 페이지 렌더링
 exports.renderMain = async (req, res, next) => {
     try {
         const user = req.user; // 현재 로그인한 사용자 정보
