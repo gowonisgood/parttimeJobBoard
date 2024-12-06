@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const db = require(process.cwd() + '/models');
 
-//회원가입
+//회원가입기능
 exports.join = async (req, res, next) => {
     const { username, password, role } = req.body; // 역할(role) 추가
     try {
@@ -26,7 +26,7 @@ exports.join = async (req, res, next) => {
     }
 };
 
-//로그인
+//로그인기능
 exports.login = (req, res, next) => {
     passport.authenticate('local', (authErr, user, info) => {
         if (authErr) {
@@ -45,7 +45,7 @@ exports.login = (req, res, next) => {
         });
     })(req, res, next);
 };
-
+//로그아웃 기능
 exports.logout = (req, res) => {
     req.logout(() => {
         res.redirect('/');

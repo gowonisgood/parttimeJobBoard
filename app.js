@@ -18,6 +18,7 @@ var usersRouter = require('./routes/users');
 const postRouter = require('./routes/post');
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
+const jobRouter = require('./routes/job');
 const{sequelize} = require('./models');
 const passportConfig = require('./passport');
 /*GO*/
@@ -70,6 +71,7 @@ app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/post', postRouter);
+app.use('/jobs',jobRouter);
 
 //에러처리
 app.use((req, res, next) => {

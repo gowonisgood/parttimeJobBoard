@@ -1,5 +1,6 @@
 const db = require(process.cwd() + '/models');
 
+//공고글 작성(아리바이트 구인 글 작성) 기능
 exports.jobPost = async (req, res, next) => {
     try {
         // 사용자로부터 입력받은 데이터 가져오기

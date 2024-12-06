@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h2>{{ job.title }} 상세 정보</h2>
+<p>{{ job.description }}</p>
+<p><strong>시급:</strong> {{ job.wage }} 원</p>
+
+<h3>지원자 목록</h3>
+{% if applicants.length > 0 %}
+<ul>
+  {% for applicant in applicants %}
+  <li>{{ applicant.username }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>아직 지원자가 없습니다.</p>
+{% endif %}
+{% endblock %}
