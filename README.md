@@ -152,3 +152,157 @@ npm start
 
 MIT 라이선스
 
+---
+
+# Part-Time Job Matching Platform
+
+A simple Express-based web application for part-time job postings and applications. Employers can post job listings, and employees can apply to those listings.
+
+---
+
+## Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Tech Stack](#tech-stack)
+3. [Installation & Usage](#installation--usage)
+4. [Database Schema](#database-schema)
+5. [Key Features](#key-features)
+   - Employer
+   - Employee
+   - Common Features
+6. [REST API Endpoints](#rest-api-endpoints)
+7. [Directory Structure](#directory-structure)
+8. [Authentication & Authorization](#authentication--authorization)
+9. [Contributing](#contributing)
+10. [License](#license)
+
+---
+
+## Project Overview
+
+This is a simple part-time job matching platform built with Express.js and Passport.js. Users can register as an `employer` to post job listings or as an `employee` to apply for those listings.
+
+## Tech Stack
+
+- Node.js (v16+)
+- Express.js
+- Passport.js (Local Strategy)
+- Sequelize (or any ORM of choice)
+- MySQL (or MariaDB)
+- EJS (or any templating engine)
+
+## Installation & Usage
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/partime-job-platform.git
+cd partime-job-platform
+
+# Install dependencies
+npm install
+
+# Configure environment variables
+# Add database credentials and session secret to .env
+
+# Run database migrations and seed data
+npx sequelize db:migrate
+npx sequelize db:seed:all
+
+# Start the server
+npm start
+```
+
+## Database Schema
+
+### 1. users
+| Column     | Type        | Description                          |
+|------------|-------------|--------------------------------------|
+| id         | INT (PK)    | Auto-increment, user identifier      |
+| username   | VARCHAR     | Unique user ID                       |
+| password   | VARCHAR     | Encrypted password                   |
+| role       | ENUM        | `employer` or `employee`             |
+
+### 2. jobs
+| Column        | Type           | Description                                 |
+|---------------|----------------|---------------------------------------------|
+| id            | INT (PK)       | Auto-increment, job listing identifier      |
+| title         | VARCHAR        | Job title                                   |
+| description   | TEXT           | Detailed job description                    |
+| wage          | DECIMAL(10,2)  | Hourly wage or monthly salary               |
+| employer_id   | INT (FK)       | References users.id where role='employer'    |
+
+### 3. applicants
+| Column        | Type      | Description                              |
+|---------------|-----------|------------------------------------------|
+| id            | INT (PK)  | Auto-increment, application identifier   |
+| job_id        | INT (FK)  | References jobs.id                       |
+| employee_id   | INT (FK)  | References users.id where role='employee'|
+
+## Key Features
+
+### Employer
+- **Post Job** (`controllers/post.js`)
+  - Save listing to the database
+  - Display new listings on the main page (`controllers/page.js`)
+- **Manage My Listings** (`controllers/page.js`)
+  - View all job listings posted by the employer
+- **View Listing Details & Applicants** (`controllers/job.js`)
+  - See applicant list and detailed information
+
+### Employee
+- **Apply for Job** (`controllers/post.js`)
+  - Record application in the applicants table upon clicking Apply
+- **View My Applications** (`controllers/page.js`)
+  - View all job listings the employee has applied to
+
+### Common Features
+- **Main Page** (`controllers/page.js`)
+  - Login screen and list of all job listings
+
+## REST API Endpoints
+
+| Method | Path                | Description                         |
+|--------|---------------------|-------------------------------------|
+| POST   | `/auth/signup`      | Sign up as employer or employee     |
+| POST   | `/auth/signin`      | Sign in                             |
+| GET    | `/jobs`             | Get list of job listings            |
+| POST   | `/jobs`             | Create a new job listing (employer only) |
+| GET    | `/jobs/:id`         | Get job listing details             |
+| POST   | `/jobs/:id/apply`   | Apply to a job listing (employee only) |
+| GET    | `/profile`          | View own profile, listings/applications |
+
+## Directory Structure
+
+```
+├─ app.js                 # Entry point
+├─ config/                # DB and Passport configuration
+├─ controllers/           # Request handlers
+│  ├─ auth.js             # Authentication
+│  ├─ page.js             # Page rendering
+│  ├─ post.js             # Posting and applying logic
+│  └─ job.js              # Listing details and applicant management
+├─ middlewares/           # Custom middleware
+├─ passport/              # Passport strategies
+│  ├─ index.js
+│  └─ localStrategy.js
+├─ routes/                # REST API routers
+└─ models/                # Sequelize models
+```
+
+## Authentication & Authorization
+
+- Passport.js Local Strategy
+- Authentication and signup handled in `controllers/auth.js`, `/middlewares`, and `/passport`
+- Role-based access control via custom middleware
+
+## Contributing
+
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -m "Add some feature"`)
+4. Push to your branch (`git push origin feature/YourFeature`)
+5. Open a Pull Request
+
+## License
+
+MIT Lic
