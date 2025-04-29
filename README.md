@@ -1,129 +1,154 @@
-# 알바 구인 공고 사이트
-<DB 사용>
-1. 사용자 테이블 (users)
-이 테이블은 플랫폼에 등록된 모든 사용자를 저장.
-주요 속성:
-id: 각 사용자를 식별하는 고유 번호. 자동으로 증가.
-username: 사용자의 고유 아이디. 중복될 수 없도록 설정.
-password: 사용자의 비밀번호를 저장. 안전한 저장을 위해 암호화된 형태로 저장.
-role: 사용자의 역할.
-employer는 고용주를 의미하며, 구인 공고를 올릴 수 있음.
-employee는 구직자를 의미, 공고에 지원할 수 있음.
+# 알바 매칭 플랫폼
 
-2. 구인 공고 테이블 (jobs)
-이 테이블은 고용주가 등록한 구인 공고를 저장.
-주요 속성:
-id: 각 구인 공고를 식별하는 고유 번호. 자동으로 증가.
-title: 공고의 제목입니다. 예를 들어, "주말 카페 아르바이트".
-description: 공고에 대한 상세 설명. 예를 들어, 업무 내용이나 근무 시간 등의 정보가 들어갈 수 있음.
-wage: 해당 공고의 시급 또는 월급 정보를 저장. 소수점 두 자리까지 가능.
-employer_id: 공고를 등록한 고용주의 사용자 ID. users 테이블의 id를 참조하는 외래 키.
+간단한 Express 기반 아르바이트 구인/구직 웹 애플리케이션입니다. 고용주(employer)는 구인 공고를 등록하고, 구직자(employee)는 공고에 지원할 수 있습니다.
 
-3. 지원자 테이블 (applicants)
-이 테이블은 구직자가 구인 공고에 지원한 내역을 저장.
-주요 속성:
-id: 각 지원 내역을 식별하는 고유 번호. 자동으로 증가.
-job_id: 지원한 구인 공고의 ID. jobs 테이블의 id를 참조하는 외래 키.
-employee_id: 지원한 구직자의 사용자 ID. users 테이블의 id를 참조하는 외래 키.
+---
 
-테이블 간 관계
-users와 jobs
-users 테이블의 id는 jobs 테이블의 employer_id와 연결되어 있음.
-즉, users 테이블의 고용주(role='employer')가 구인 공고를 등록할 수 있음.
-jobs와 applicants
-jobs 테이블의 id는 applicants 테이블의 job_id와 연결되어 있음.
-구직자는 특정 공고에 지원하기 위해 applicants 테이블에 데이터를 추가.
-users와 applicants
-users 테이블의 id는 applicants 테이블의 employee_id와 연결되어 있음.
-구직자(role='employee')는 자신이 지원한 공고 정보를 applicants 테이블에 저장.
+## 목차
 
+1. [프로젝트 소개](#프로젝트-소개)
+2. [기술 스택](#기술-스택)
+3. [설치 및 실행](#설치-및-실행)
+4. [데이터베이스 스키마](#데이터베이스-스키마)
+5. [주요 기능](#주요-기능)
+   - 고용주(Employer)
+   - 구직자(Employee)
+   - 공통 기능
+6. [REST API 엔드포인트](#rest-api-엔드포인트)
+7. [디렉터리 구조](#디렉터리-구조)
+8. [인증 및 권한 관리](#인증-및-권한-관리)
+9. [기여하기](#기여하기)
+10. [라이선스](#라이선스)
 
-<핵심 시나리오 1가지 이상 결정 및 구현>
-아르바이트 구인 모집 공고글 작성 및 지원 프로그램
+---
 
-employee와 employer의 기능을 따로 구현
-employer 
-아르바이트 구인 글 작성  (controllers/post.js)
-구인글 작성시 DB에 저장(controllers/post.js)되고 , 메인 페이지에 렌더링 (controllers/page.js)됨.
+## 프로젝트 소개
 
+Express.js와 Passport.js를 이용하여 구현한 간단한 아르바이트 구인/구직 플랫폼입니다. 사용자는 `employer`(고용주)와 `employee`(구직자) 역할로 나뉘며, 각각 공고 작성 및 지원 기능을 제공합니다.
 
+## 기술 스택
 
+- Node.js (v16+)
+- Express.js
+- Passport.js (Local Strategy)
+- Sequelize (또는 원하는 ORM)
+- MySQL (또는 MariaDB)
+- EJS (또는 다른 템플릿 엔진)
 
-프로필 조회 (controllers/page.js)
-프로필 조회시 자신이 작성한 공고글을 볼 수 있음.
+## 설치 및 실행
 
+```bash
+# 레포지토리 복제
+git clone https://github.com/yourusername/partime-job-platform.git
+cd partime-job-platform
 
+# 의존성 설치
+npm install
 
+# 환경 변수 설정
+# .env 파일에 데이터베이스 정보와 세션 시크릿 등 추가
 
-상세 보기 (controllers/job.js)
-내가 올린 공고글의 상세 정보와 지원자 목록을 볼 수 있음.
+# 데이터베이스 마이그레이션 및 시딩
+npx sequelize db:migrate
+npx sequelize db:seed:all
 
+# 서버 시작
+npm start
+```
 
+## 데이터베이스 스키마
 
+### 1. users
+| 컬럼       | 타입        | 설명                         |
+|------------|-------------|------------------------------|
+| id         | INT (PK)    | 자동 증가, 사용자 식별 번호  |
+| username   | VARCHAR     | 고유 아이디                  |
+| password   | VARCHAR     | 암호화된 비밀번호            |
+| role       | ENUM        | `employer` 또는 `employee`   |
 
-employee
-아르바이트 지원 (controllers/post.js)
-지원하기 버튼을 이용하여 아르바이트 지원 가능
+### 2. jobs
+| 컬럼         | 타입        | 설명                                     |
+|--------------|-------------|------------------------------------------|
+| id           | INT (PK)    | 자동 증가, 공고 식별 번호                |
+| title        | VARCHAR     | 공고 제목                                |
+| description  | TEXT        | 공고 상세 설명                           |
+| wage         | DECIMAL(10,2) | 시급 또는 월급                         |
+| employer_id  | INT (FK)    | users.id (role='employer') 참조          |
 
+### 3. applicants
+| 컬럼         | 타입        | 설명                                     |
+|--------------|-------------|------------------------------------------|
+| id           | INT (PK)    | 자동 증가, 지원 내역 식별 번호          |
+| job_id       | INT (FK)    | jobs.id 참조                             |
+| employee_id  | INT (FK)    | users.id (role='employee') 참조          |
 
+## 주요 기능
 
+### 고용주 (Employer)
+- **공고 작성** (`controllers/post.js`)
+  - 공고 등록 시 DB에 저장
+  - 메인 페이지에 최신 공고 렌더링 (`controllers/page.js`)
+- **내 공고 관리** (`controllers/page.js`)
+  - 프로필 페이지에서 자신이 작성한 공고 목록 조회
+- **공고 상세 조회 및 지원자 관리** (`controllers/job.js`)
+  - 지원자 목록 및 상세 정보 확인
 
+### 구직자 (Employee)
+- **공고 지원** (`controllers/post.js`)
+  - 지원하기 버튼 클릭 시 applicants 테이블에 기록
+- **지원 내역 조회** (`controllers/page.js`)
+  - 프로필 클릭 시 자신이 지원한 공고 목록 조회
 
+### 공통 기능
+- **메인 페이지** (`controllers/page.js`)
+  - 로그인 화면
+  - 전체 공고 리스트 렌더링
 
+## REST API 엔드포인트
 
+| 메서드 | 경로              | 설명                             |
+|--------|-------------------|----------------------------------|
+| POST   | `/auth/signup`    | 회원가입 (employer/employee)     |
+| POST   | `/auth/signin`    | 로그인                           |
+| GET    | `/jobs`           | 공고 리스트 조회                |
+| POST   | `/jobs`           | 공고 생성 (employer 전용)         |
+| GET    | `/jobs/:id`       | 공고 상세 조회                  |
+| POST   | `/jobs/:id/apply` | 공고 지원 (employee 전용)        |
+| GET    | `/profile`        | 내 프로필 및 공고/지원 내역 조회|
 
+## 디렉터리 구조
 
+```
+├─ app.js                 # 서버 진입점
+├─ config/                # DB, Passport 설정
+├─ controllers/           # 요청 핸들러
+│  ├─ auth.js             # 로그인/회원가입
+│  ├─ page.js             # 페이지 렌더링
+│  ├─ post.js             # 글 작성/지원 처리
+│  └─ job.js              # 공고 상세/지원자 관리
+├─ middlewares/           # 커스텀 미들웨어
+├─ passport/              # Passport 전략 설정
+│  ├─ index.js
+│  └─ localStrategy.js
+├─ routes/                # REST API 라우터
+└─ models/                # Sequelize 모델 정의
+```
 
+## 인증 및 권한 관리
 
+- Passport.js Local Strategy 사용
+- 로그인/회원가입: `controllers/auth.js`, `/middlewares` 및 `/passport`
+- 역할 기반 접근 제어 미들웨어 적용
 
+## 기여하기
 
-프로필 클릭 시 지원한 알바 목록을 볼 수 있음. (controllers/page.js)
+1. Fork 프로젝트
+2. 새로운 브랜치 생성 (`git checkout -b feature/YourFeature`)
+3. 변경 사항 커밋 (`git commit -m "Add some feature"`)
+4. 푸시 (`git push origin feature/YourFeature`)
+5. Pull Request 생성
 
+## 라이선스
 
+MIT 라이선스
 
-공통 기능
-Main 페이지 렌더링시 (/controllers/page.js)
-가장 처음에는 로그인 화면 나옴
-여태까지 올라온 공고글 화면에 표시
-
-
-
-
-
-
-→ 더 자세한 코드는 controllers/page.js 에서 확인 가능
-
-<로그인 기능 구현>
-(/middlewares/index
-/passport/index.js
-/passport/localStrategy.js
-/controllers/auth.js)
-메인페이지: 
-로그인 기능 /controllers/auth.js
-passport 모듈을 사용
-
-
-회원가입: /controllers/auth.js
-employer
-employee
-
-아이디, 비밀번호, 그리고 employer인지 employee인지 를 입력하여 회원가입.
-
-<Express 사용>
-
-
-
-
-곳곳에서 express 모듈 사용 자세한 내용은 app.js확인
-<Rest ApI 사용>
-(/routes/*)
-
-
-
-
-rest API를 사용하였으며 , 라우터 모듈을 활용하여 각각의 라우터 따로 정의
-자세한 내용은 /routes 디렉터리 밑에서 확인 가능
-
-
-
-2024 웹응용 프로그래밍 텀프로젝트로 진행됨.
